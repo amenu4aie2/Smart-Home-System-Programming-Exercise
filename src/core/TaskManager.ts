@@ -1,50 +1,105 @@
 import { Task, Priority } from './Task';
+import { AuthService } from '../auth/AuthService';
 
 export class TaskManager {
-    private tasks: Task[] = [];
+    private static instance: TaskManager;
+    private tasks: Map<string, Task[]> = new Map();
+    private authService: AuthService;
 
-    public addTask(task: Task): void {
-        if (this.tasks.some(t => t.overlaps(task))) {
-            throw new Error("Task overlaps with an existing task");
-        }
-        this.tasks.push(task);
-        this.sortTasks();
+    private constructor() {
+        this.authService = AuthService.getInstance();
     }
 
-    public removeTask(id: string): void {
-        const index = this.tasks.findIndex(t => t.id === id);
+    public static getInstance(): TaskManager {
+        if (!TaskManager.instance) {
+            TaskManager.instance = new TaskManager();
+        }
+        return TaskManager.instance;
+    }
+
+    public addTask(username: string, task: Task): void {
+        if (!this.authService.hasPermission(username, 'create:task')) {
+            throw new Error('User does not have permission to create tasks');
+        }
+        if (!this.tasks.has(username)) {
+            this.tasks.set(username, []);
+        }
+        const userTasks = this.tasks.get(username)!;
+        if (userTasks.some(t => t.overlaps(task))) {
+            throw new Error("Task overlaps with an existing task");
+        }
+        userTasks.push(task);
+        this.sortTasks(username);
+    }
+
+    public removeTask(username: string, id: string): void {
+        if (!this.authService.hasPermission(username, 'delete:task')) {
+            throw new Error('User does not have permission to delete tasks');
+        }
+        const userTasks = this.tasks.get(username);
+        if (!userTasks) {
+            throw new Error("No tasks found for this user");
+        }
+        const index = userTasks.findIndex(t => t.id === id);
         if (index === -1) {
             throw new Error("Task not found");
         }
-        this.tasks.splice(index, 1);
+        userTasks.splice(index, 1);
     }
 
-    public getTasksSortedByStartTime(): Task[] {
-        return [...this.tasks];  // Already sorted due to sortTasks() call in addTask
+    public getTasksSortedByStartTime(username: string): Task[] {
+        if (!this.authService.hasPermission(username, 'read:task')) {
+            throw new Error('User does not have permission to read tasks');
+        }
+        return this.tasks.get(username) || [];  // Already sorted due to sortTasks() call in addTask
     }
 
-    public editTask(id: string, updatedTask: Partial<Task>): void {
-        const task = this.tasks.find(t => t.id === id);
+    public editTask(username: string, id: string, updatedTask: Partial<Task>): void {
+        if (!this.authService.hasPermission(username, 'update:task')) {
+            throw new Error('User does not have permission to update tasks');
+        }
+        const userTasks = this.tasks.get(username);
+        if (!userTasks) {
+            throw new Error("No tasks found for this user");
+        }
+        const task = userTasks.find(t => t.id === id);
         if (!task) {
             throw new Error("Task not found");
         }
         Object.assign(task, updatedTask);
-        this.sortTasks();
+        this.sortTasks(username);
     }
 
-    public markTaskAsCompleted(id: string): void {
-        const task = this.tasks.find(t => t.id === id);
+    public markTaskAsCompleted(username: string, id: string): void {
+        if (!this.authService.hasPermission(username, 'update:task')) {
+            throw new Error('User does not have permission to update tasks');
+        }
+        const userTasks = this.tasks.get(username);
+        if (!userTasks) {
+            throw new Error("No tasks found for this user");
+        }
+        const task = userTasks.find(t => t.id === id);
         if (!task) {
             throw new Error("Task not found");
         }
         task.completed = true;
     }
 
-    public getTasksByPriority(priority: Priority): Task[] {
-        return this.tasks.filter(t => t.priority === priority);
+    public getTasksByPriority(username: string, priority: Priority): Task[] {
+        if (!this.authService.hasPermission(username, 'read:task')) {
+            throw new Error('User does not have permission to read tasks');
+        }
+        const userTasks = this.tasks.get(username);
+        if (!userTasks) {
+            return [];
+        }
+        return userTasks.filter(t => t.priority === priority);
     }
 
-    private sortTasks(): void {
-        this.tasks.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+    private sortTasks(username: string): void {
+        const userTasks = this.tasks.get(username);
+        if (userTasks) {
+            userTasks.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+        }
     }
 }
