@@ -1,0 +1,29 @@
+graph TD
+    A[User] --> B[SmartHomeHub]
+    B --> C[AuthService]
+    B --> D[DeviceManager]
+    B --> E[TaskManager]
+    B --> F[Scheduler]
+    B --> G[AutomationEngine]
+    B --> H[NotificationService]
+
+    D --> I[SmartDevice]
+    I --> J[Light]
+    I --> K[Thermostat]
+    I --> L[DoorLock]
+    I --> M[CoffeeMaker]
+
+    E --> N[Task]
+
+    F --> O[ScheduledTask]
+
+    G --> P[AutomationRule]
+
+    B --> Q[Command]
+    Q --> R[TurnOnCommand]
+    Q --> S[TurnOffCommand]
+
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style I fill:#bfb,stroke:#333,stroke-width:2px
+

@@ -71,7 +71,7 @@ The Smart Home System Simulation is a console-based application that models the 
 The primary goal is to create a flexible, extensible system that can manage various smart devices within a home environment, showcasing how different design patterns can be used together to solve real-world problems in software architecture.
 
 ## Features
-   
+
 - **Device Management**: Add, remove, and control various smart devices (lights, thermostats, door locks).
 - **Scheduling**: Set up schedules for device operations.
 - **Automation**: Create and execute rules based on device states or environmental conditions.
@@ -97,6 +97,21 @@ The system is built around a central `SmartHomeHub` that manages all devices and
 Below is a high-level diagram of the system architecture:
 
 ![System Design Diagram](docs/images/system-design.jpg)
+
+
+The system is built around a central `SmartHomeHub` that manages all devices and operations. Key components include:
+
+- `SmartDevice`: Base class for all smart devices
+- `DeviceFactory`: Creates different types of smart devices
+- `Scheduler`: Manages scheduled tasks
+- `AutomationEngine`: Handles automation rules
+- `Command`: Interface for all device commands
+
+Below is a high-level diagram of the system architecture:
+
+![System Architecture Diagram](docs/diagrams/system_architecture.mmd)
+
+For a detailed view of the project structure, see the [Project Structure Diagram](docs/diagrams/project_structure.mmd).
 
 ## Design Patterns
 
