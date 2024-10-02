@@ -79,7 +79,12 @@ export class SmartHomeHub {
             this.notificationService.sendNotification(username, `Failed to add task: ${errorMessage}`);
         }
     }
-
+    public getAllDevices(username: string): SmartDevice[] {
+        if (!this.authService.hasPermission(username, 'read:device')) {
+            throw new Error('User does not have permission to access devices');
+        }
+        return Array.from(this.devices.values());
+    }
     public removeTask(username: string, id: string): void {
         if (!this.authService.hasPermission(username, 'delete:task')) {
             throw new Error('User does not have permission to remove tasks');

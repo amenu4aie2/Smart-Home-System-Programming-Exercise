@@ -12,7 +12,10 @@ export class LoggingDeviceDecorator extends SmartDevice {
         console.log(`Turning on ${this.getName()}`);
         this.device.turnOn();
     }
-
+// get type
+    public getType(): string {
+        return this.device.getType();
+    }
     public turnOff(): void {
         console.log(`Turning off ${this.getName()}`);
         this.device.turnOff();

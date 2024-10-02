@@ -13,7 +13,10 @@ export class CoffeeMakerAdapter extends SmartDevice {
         this.coffeeMaker.switchOn();
         this.status = true;
     }
-
+    // get type
+    public getType(): string {
+        return 'coffee-maker';
+    }
     public turnOff(): void {
         this.coffeeMaker.switchOff();
         this.status = false;

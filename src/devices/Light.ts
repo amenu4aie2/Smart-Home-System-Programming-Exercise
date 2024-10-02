@@ -29,4 +29,7 @@ export class Light extends SmartDevice {
     public getBrightness(): number {
         return this.brightness;
     }
+    public getType(): string {
+        return 'light';
+    }
 }

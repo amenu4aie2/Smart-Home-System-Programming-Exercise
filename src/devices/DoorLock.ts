@@ -29,4 +29,8 @@ export class DoorLock extends SmartDevice {
     public isLocked(): boolean {
         return this.locked;
     }
+    // gettype
+    public getType(): string {
+        return 'door-lock';
+    }
 }

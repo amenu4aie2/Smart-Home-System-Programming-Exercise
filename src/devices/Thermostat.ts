@@ -27,4 +27,8 @@ export class Thermostat extends SmartDevice {
     public getTemperature(): number {
         return this.temperature;
     }
+    // get type
+    public getType(): string {
+        return 'thermostat';
+    }
 }
