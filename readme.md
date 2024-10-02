@@ -1,5 +1,11 @@
 # Smart Home System Simulation
 
+## Demo
+
+Check out our demo video to see the Smart Home System Simulation in action:
+
+[Watch Demo Video](docs/videos/demo.mkv)
+
 ## Table of Contents
 
 - [Exercise Implementation](#exercise-implementation)
@@ -109,6 +115,97 @@ The system is built around a central `SmartHomeHub` that manages all devices and
 Below is a high-level diagram of the system architecture:
 
 ![System Architecture Diagram](docs/diagrams/system-architecture-mermaid.mmd)
+
+```mermaid
+%%{init: {'theme': 'neutral', 'themeVariables': { 'primaryColor': '#BB2528', 'primaryTextColor': '#fff', 'primaryBorderColor': '#7C0000', 'lineColor': '#F8B229', 'secondaryColor': '#006100', 'tertiaryColor': '#ff0000'}}}%%
+graph TD
+    A[User] --> B[SmartHomeHub]
+    B --> C[AuthService]
+    B --> D[DeviceManager]
+    B --> E[TaskManager]
+    B --> F[Scheduler]
+    B --> G[AutomationEngine]
+    B --> H[NotificationService]
+
+    D --> I[SmartDevice]
+    I --> J[Light]
+    I --> K[Thermostat]
+    I --> L[DoorLock]
+    I --> M[CoffeeMaker]
+
+    E --> N[Task]
+
+    F --> O[ScheduledTask]
+
+    G --> P[AutomationRule]
+
+    B --> Q[Command]
+    Q --> R[TurnOnCommand]
+    Q --> S[TurnOffCommand]
+
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style I fill:#bfb,stroke:#333,stroke-width:2px
+```
+
+For a detailed view of the project structure, see below:
+
+```mermaid
+%%{init: {'theme': 'neutral', 'themeVariables': { 'primaryColor': '#BB2528', 'primaryTextColor': '#fff', 'primaryBorderColor': '#7C0000', 'lineColor': '#F8B229', 'secondaryColor': '#006100', 'tertiaryColor': '#ff0000'}}}%%
+graph TD
+    A[Smart Home System] --> B[src]
+    A --> C[docs]
+    A --> D[tests]
+    A --> E[package.json]
+    A --> F[tsconfig.json]
+    A --> G[README.md]
+
+    B --> BA[core]
+    B --> BB[devices]
+    B --> BC[utils]
+    B --> BD[auth]
+    B --> BE[commands]
+    B --> BF[index.ts]
+
+    BA --> BA1[SmartHomeHub.ts]
+    BA --> BA2[SmartDevice.ts]
+    BA --> BA3[Task.ts]
+
+    BB --> BB1[Light.ts]
+    BB --> BB2[Thermostat.ts]
+    BB --> BB3[DoorLock.ts]
+    BB --> BB4[CoffeeMaker.ts]
+
+    BC --> BC1[Scheduler.ts]
+    BC --> BC2[AutomationEngine.ts]
+    BC --> BC3[NotificationService.ts]
+
+    BD --> BD1[AuthService.ts]
+
+    BE --> BE1[Command.ts]
+    BE --> BE2[TurnOnCommand.ts]
+    BE --> BE3[TurnOffCommand.ts]
+
+    C --> CA[guides]
+    C --> CB[images]
+    C --> CC[diagrams]
+
+    CA --> CA1[login_guide.md]
+    CA --> CA2[task_management_guide.md]
+    CA --> CA3[device_management_guide.md]
+    CA --> CA4[scheduler_guide.md]
+    CA --> CA5[automation_guide.md]
+
+    CB --> CB1[system-design.jpg]
+
+    CC --> CC1[project_structure.mmd]
+    CC --> CC2[system_architecture.mmd]
+
+    D --> D1[core.test.ts]
+    D --> D2[devices.test.ts]
+    D --> D3[utils.test.ts]
+    D --> D4[auth.test.ts]
+```
 
 For a detailed view of the project structure, see the [Project Structure Diagram](docs/diagrams/project-structure-mermaid.mmd).
 
