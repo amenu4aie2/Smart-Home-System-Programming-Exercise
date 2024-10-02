@@ -1,4 +1,3 @@
-```typescript
 export abstract class SmartDevice {
     protected id: string;
     protected name: string;
@@ -25,4 +24,3 @@ export abstract class SmartDevice {
     public abstract turnOn(): void;
     public abstract turnOff(): void;
 }
-```
