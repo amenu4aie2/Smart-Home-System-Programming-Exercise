@@ -2,7 +2,7 @@
 
 ## Demo
 
-Check out our demo video to see the Smart Home System Simulation in action:
+Check out our demo video to see the Smart Home System Simulation in action
 
 [Watch Demo Video](docs/videos/demo.mkv)
 
