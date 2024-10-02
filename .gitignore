@@ -1,0 +1,2 @@
+# Node modules should not be pushed to the repo
+node_modules/
