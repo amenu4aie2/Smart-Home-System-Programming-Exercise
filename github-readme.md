@@ -1,6 +1,7 @@
 # Smart Home System Simulation
 
 ## Table of Contents
+
 - [Project Overview](#project-overview)
 - [Features](#features)
 - [Technology Stack](#technology-stack)
@@ -44,6 +45,10 @@ The system is built around a central `SmartHomeHub` that manages all devices and
 - `Scheduler`: Manages scheduled tasks
 - `AutomationEngine`: Handles automation rules
 - `Command`: Interface for all device commands
+
+Below is a high-level diagram of the system architecture:
+
+![System Design Diagram](docs/images/system-design.jpg)
 
 ## Design Patterns
 
@@ -116,4 +121,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 - This project was inspired by real-world smart home systems and IoT architectures.
 - Special thanks to the open-source community for providing invaluable resources and tools.
-
