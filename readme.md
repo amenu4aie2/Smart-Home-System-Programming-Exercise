@@ -98,7 +98,6 @@ Below is a high-level diagram of the system architecture:
 
 ![System Design Diagram](docs/images/system-design.jpg)
 
-
 The system is built around a central `SmartHomeHub` that manages all devices and operations. Key components include:
 
 - `SmartDevice`: Base class for all smart devices
@@ -109,9 +108,9 @@ The system is built around a central `SmartHomeHub` that manages all devices and
 
 Below is a high-level diagram of the system architecture:
 
-![System Architecture Diagram](docs/diagrams/system_architecture.mmd)
+![System Architecture Diagram](docs/diagrams/system-architecture-mermaid.mmd)
 
-For a detailed view of the project structure, see the [Project Structure Diagram](docs/diagrams/project_structure.mmd).
+For a detailed view of the project structure, see the [Project Structure Diagram](docs/diagrams/project-structure-mermaid.mmd).
 
 ## Design Patterns
 
