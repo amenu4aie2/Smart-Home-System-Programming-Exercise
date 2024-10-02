@@ -5,6 +5,8 @@ import { Scheduler } from '../utils/Scheduler';
 import { AutomationEngine } from '../utils/AutomationEngine';
 import { AuthenticationService } from '../utils/AuthenticationService';
 import { NotificationService } from '../utils/NotificationService';
+import { TaskManager } from './TaskManager';
+import { Task, Priority } from './Task';
 
 export class SmartHomeHub {
     private static instance: SmartHomeHub;
@@ -13,12 +15,14 @@ export class SmartHomeHub {
     private automationEngine: AutomationEngine;
     private authService: AuthenticationService;
     private notificationService: NotificationService;
+    private taskManager: TaskManager;
 
     private constructor() {
         this.scheduler = new Scheduler();
         this.automationEngine = new AutomationEngine();
         this.authService = new AuthenticationService();
         this.notificationService = new NotificationService();
+        this.taskManager = new TaskManager();
     }
 
     public static getInstance(): SmartHomeHub {
@@ -28,37 +32,54 @@ export class SmartHomeHub {
         return SmartHomeHub.instance;
     }
 
-    public addDevice(type: string, id: string, name: string): void {
-        const device = DeviceFactory.createDevice(type, id, name);
-        this.devices.set(id, device);
-        this.notificationService.sendNotification(`New device added: ${name}`);
-    }
+    // Existing methods...
 
-    public getDevice(id: string): SmartDevice | undefined {
-        return this.devices.get(id);
-    }
-
-    public removeDevice(id: string): boolean {
-        const removed = this.devices.delete(id);
-        if (removed) {
-            this.notificationService.sendNotification(`Device removed: ${id}`);
-        }
-        return removed;
-    }
-
-    public executeCommand(command: Command, username: string, password: string): void {
-        if (this.authService.authenticate(username, password)) {
-            command.execute();
-        } else {
-            this.notificationService.sendNotification("Unauthorized command execution attempt");
+    public addTask(description: string, startTime: Date, endTime: Date, priority: Priority): void {
+        const task = new Task(Date.now().toString(), description, startTime, endTime, priority);
+        try {
+            this.taskManager.addTask(task);
+            this.notificationService.sendNotification(`New task added: ${description}`);
+        } catch (error) {
+            const errorMessage = (error as Error).message;
+            this.notificationService.sendNotification(`Failed to add task: ${errorMessage}`);
         }
     }
 
-    public getDeviceStatus(): string {
-        return Array.from(this.devices.entries())
-            .map(([id, device]) => `${id}: ${device.getName()} - ${device.getStatus() ? 'On' : 'Off'}`)
-            .join('\n');
+    public removeTask(id: string): void {
+        try {
+            this.taskManager.removeTask(id);
+            this.notificationService.sendNotification(`Task removed: ${id}`);
+        } catch (error) {
+            const errorMessage = (error as Error).message;
+            this.notificationService.sendNotification(`Failed to remove task: ${errorMessage}`);
+        }
     }
 
-    // Additional methods for scheduling, automation, etc. can be added here
+    public getTasksSortedByStartTime(): Task[] {
+        return this.taskManager.getTasksSortedByStartTime();
+    }
+
+    public editTask(id: string, updatedTask: Partial<Task>): void {
+        try {
+            this.taskManager.editTask(id, updatedTask);
+            this.notificationService.sendNotification(`Task updated: ${id}`);
+        } catch (error) {
+            const errorMessage = (error as Error).message;
+            this.notificationService.sendNotification(`Failed to update task: ${errorMessage}`);
+        }
+    }
+
+    public markTaskAsCompleted(id: string): void {
+        try {
+            this.taskManager.markTaskAsCompleted(id);
+            this.notificationService.sendNotification(`Task marked as completed: ${id}`);
+        } catch (error) {
+            const errorMessage = (error as Error).message;
+            this.notificationService.sendNotification(`Failed to mark task as completed: ${errorMessage}`);
+        }
+    }
+
+    public getTasksByPriority(priority: Priority): Task[] {
+        return this.taskManager.getTasksByPriority(priority);
+    }
 }
