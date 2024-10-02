@@ -13,7 +13,7 @@ hub.addDevice('doorlock', 'lock1', 'Front Door Lock');
 const livingRoomLight = hub.getDevice('light1');
 if (livingRoomLight) {
     const turnOnLightCommand = new TurnOnCommand(livingRoomLight);
-    hub.executeCommand(turnOnLightCommand);
+    hub.executeCommand(turnOnLightCommand, 'yourUsername', 'yourPassword');
     console.log('Living Room Light turned on');
 }
 
@@ -31,4 +31,4 @@ if (frontDoorLock && 'lock' in frontDoorLock) {
     console.log('Front Door locked');
 }
 
-console.log('Smart Home System initialized and running!');  
+console.log('Smart Home System initialized and running!');
