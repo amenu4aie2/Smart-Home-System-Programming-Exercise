@@ -80,18 +80,7 @@ export class AuthService {
     private async createDefaultAdmin() {
         try {
             const hashedPassword = await bcrypt.hash('adminpassword', 12);  // CHANGE THIS PASSWORD!
-            // const adminUser: User = {
-            //     id: uuidv4(),
-            //     username: 'admin',  // Admin username
-            //     email: 'admin@example.com',
-            //     passwordHash: hashedPassword,
-            //     failedAttempts: 0,
-            //     lastFailedAttempt: new Date(0),
-            //     isActive: true,
-            //     roles: new Set(), // Important: initialize as an empty Set
-            //     createdAt: new Date(),
-            //     updatedAt: new Date()
-            // };
+
             const adminUser = UserFactory.createUser('admin', 'admin@example.com', 'adminpassword');
 
             this.users.set('admin', adminUser);

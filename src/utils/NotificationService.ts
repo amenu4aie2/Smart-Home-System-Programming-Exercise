@@ -1,20 +1,36 @@
 import { AuthService } from '../auth/AuthService';
 
+/**
+ * Interface representing a notification.
+ * Each notification has an ID, message, and timestamp.
+ */
 interface Notification {
-    id: string;
-    message: string;
-    timestamp: Date;
+    id: string; // Unique identifier for the notification
+    message: string; // Message content of the notification
+    timestamp: Date; // Timestamp when the notification was created
 }
 
+/**
+ * Singleton class for managing notifications.
+ * Provides methods to send, retrieve, and remove notifications.
+ */
 export class NotificationService {
     private static instance: NotificationService;
     private notifications: Map<string, Notification[]> = new Map();
     private authService: AuthService;
 
+    /**
+     * Private constructor to prevent direct instantiation.
+     * Initializes the AuthService instance.
+     */
     private constructor() {
         this.authService = AuthService.getInstance();
     }
 
+    /**
+     * Returns the singleton instance of the NotificationService.
+     * @returns The singleton instance of NotificationService.
+     */
     public static getInstance(): NotificationService {
         if (!NotificationService.instance) {
             NotificationService.instance = new NotificationService();
@@ -22,6 +38,13 @@ export class NotificationService {
         return NotificationService.instance;
     }
 
+    /**
+     * Sends a notification to a user.
+     * @param username - The username of the user to send the notification to.
+     * @param message - The message content of the notification.
+     * @returns The unique identifier of the sent notification.
+     * @throws Error if the user does not have permission to send notifications.
+     */
     public sendNotification(username: string, message: string): string {
         if (!this.authService.hasPermission(username, 'create:notification')) {
             throw new Error('User does not have permission to send notifications');
@@ -50,6 +73,12 @@ export class NotificationService {
         return notificationId;
     }
 
+    /**
+     * Retrieves all notifications for a user.
+     * @param username - The username of the user requesting the notifications.
+     * @returns An array of Notification objects.
+     * @throws Error if the user does not have permission to read notifications.
+     */
     public getNotifications(username: string): Notification[] {
         if (!this.authService.hasPermission(username, 'read:notification')) {
             throw new Error('User does not have permission to read notifications');
@@ -58,6 +87,12 @@ export class NotificationService {
         return this.notifications.get(username) || [];
     }
 
+    /**
+     * Removes a specific notification for a user.
+     * @param username - The username of the user removing the notification.
+     * @param notificationId - The unique identifier of the notification to be removed.
+     * @throws Error if the user does not have permission to remove notifications.
+     */
     public removeNotification(username: string, notificationId: string): void {
         if (!this.authService.hasPermission(username, 'delete:notification')) {
             throw new Error('User does not have permission to remove notifications');
@@ -76,6 +111,11 @@ export class NotificationService {
         userNotifications.splice(index, 1);
     }
 
+    /**
+     * Clears all notifications for a user.
+     * @param username - The username of the user clearing the notifications.
+     * @throws Error if the user does not have permission to clear notifications.
+     */
     public clearAllNotifications(username: string): void {
         if (!this.authService.hasPermission(username, 'delete:notification')) {
             throw new Error('User does not have permission to clear notifications');

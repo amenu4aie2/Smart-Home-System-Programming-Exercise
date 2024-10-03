@@ -6,18 +6,24 @@ import { Scheduler } from './utils/Scheduler';
 import { AutomationEngine } from './utils/AutomationEngine';
 import { Command } from './commands/Command';
 
+// Create instances of core services
 const hub = SmartHomeHub.getInstance();
 const authService = AuthService.getInstance();
+const scheduler = Scheduler.getInstance();
+const automationEngine = AutomationEngine.getInstance();
 
+// Create a readline interface for user input
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-const scheduler = Scheduler.getInstance();
-const automationEngine = AutomationEngine.getInstance();
-let currentUser: string | null = null;
-let currentToken: string | null = null;
 
+let currentUser: string | null = null; // Currently logged-in user
+let currentToken: string | null = null; // Authentication token for the current user
+
+/**
+ * Displays the login menu to the user.
+ */
 function displayLoginMenu() {
     console.log('\nSmart Home System - Login');
     console.log('1. Login');
@@ -26,6 +32,10 @@ function displayLoginMenu() {
     rl.question('Enter your choice: ', handleLoginChoice);
 }
 
+/**
+ * Handles the user's choice in the login menu.
+ * @param choice - The user's choice.
+ */
 function handleLoginChoice(choice: string) {
     switch (choice) {
         case '1':
@@ -44,6 +54,9 @@ function handleLoginChoice(choice: string) {
     }
 }
 
+/**
+ * Prompts the user to login by entering their username and password.
+ */
 function login() {
     rl.question('Enter username: ', (username) => {
         rl.question('Enter password: ', async (password) => {
@@ -66,6 +79,9 @@ function login() {
     });
 }
 
+/**
+ * Prompts the user to register by entering their username, email, and password.
+ */
 function register() {
     rl.question('Enter username: ', (username) => {
         rl.question('Enter email: ', (email) => {
@@ -83,6 +99,9 @@ function register() {
     });
 }
 
+/**
+ * Displays the main menu to the user.
+ */
 function displayMainMenu() {
     console.log('\nSmart Home System - Main Menu');
     console.log('1. Task Management');
@@ -92,6 +111,11 @@ function displayMainMenu() {
     console.log('5. Logout');
     rl.question('Enter your choice: ', handleMainMenuChoice);
 }
+
+/**
+ * Handles the user's choice in the main menu.
+ * @param choice - The user's choice.
+ */
 function handleMainMenuChoice(choice: string) {
     switch (choice) {
         case '1':
@@ -115,6 +139,9 @@ function handleMainMenuChoice(choice: string) {
     }
 }
 
+/**
+ * Displays the scheduler menu to the user.
+ */
 function displaySchedulerMenu() {
     console.log('\nScheduler Menu');
     console.log('1. Schedule Task');
@@ -124,6 +151,10 @@ function displaySchedulerMenu() {
     rl.question('Enter your choice: ', handleSchedulerMenuChoice);
 }
 
+/**
+ * Handles the user's choice in the scheduler menu.
+ * @param choice - The user's choice.
+ */
 function handleSchedulerMenuChoice(choice: string) {
     switch (choice) {
         case '1':
@@ -143,7 +174,11 @@ function handleSchedulerMenuChoice(choice: string) {
             displaySchedulerMenu();
     }
 }
-// Scheduler functionality:
+
+/**
+ * Prompts the user to schedule a new task.
+ * Requires the user to be logged in.
+ */
 function scheduleTask() {
     if (!currentUser) {
         console.log('You must be logged in to schedule a task.');
@@ -172,7 +207,10 @@ function scheduleTask() {
         });
     });
 }
-
+/**
+ * Displays the scheduled tasks for the current user.
+ * Requires the user to be logged in.
+ */
 function viewScheduledTasks() {
     if (!currentUser) {
         console.log('You must be logged in to view scheduled tasks.');
@@ -188,6 +226,10 @@ function viewScheduledTasks() {
     displaySchedulerMenu();
 }
 
+/**
+ * Prompts the user to remove a scheduled task by entering its ID.
+ * Requires the user to be logged in.
+ */
 function removeScheduledTask() {
     if (!currentUser) {
         console.log('You must be logged in to remove a scheduled task.');
@@ -205,6 +247,9 @@ function removeScheduledTask() {
     });
 }
 
+/**
+ * Displays the task management menu to the user.
+ */
 function displayTaskMenu() {
     console.log('\nTask Management');
     console.log('1. Add Task');
@@ -217,6 +262,10 @@ function displayTaskMenu() {
     rl.question('Enter your choice: ', handleTaskMenuChoice);
 }
 
+/**
+ * Handles the user's choice in the task management menu.
+ * @param choice - The user's choice.
+ */
 function handleTaskMenuChoice(choice: string) {
     switch (choice) {
         case '1':
@@ -246,6 +295,10 @@ function handleTaskMenuChoice(choice: string) {
     }
 }
 
+/**
+ * Prompts the user to add a new task by entering its details.
+ * Requires the user to be logged in.
+ */
 function addTask() {
     if (!currentUser) {
         console.log('You must be logged in to add a task.');
@@ -272,6 +325,10 @@ function addTask() {
     });
 }
 
+/**
+ * Prompts the user to remove a task by entering its ID.
+ * Requires the user to be logged in.
+ */
 function removeTask() {
     if (!currentUser) {
         console.log('You must be logged in to remove a task.');
@@ -289,6 +346,10 @@ function removeTask() {
     });
 }
 
+/**
+ * Displays all tasks for the current user.
+ * Requires the user to be logged in.
+ */
 function viewAllTasks() {
     if (!currentUser) {
         console.log('You must be logged in to view tasks.');
@@ -304,6 +365,10 @@ function viewAllTasks() {
     displayTaskMenu();
 }
 
+/**
+ * Prompts the user to edit a task by entering its ID and new details.
+ * Requires the user to be logged in.
+ */
 function editTask() {
     if (!currentUser) {
         console.log('You must be logged in to edit a task.');
@@ -334,6 +399,10 @@ function editTask() {
     });
 }
 
+/**
+ * Prompts the user to mark a task as completed by entering its ID.
+ * Requires the user to be logged in.
+ */
 function markTaskAsCompleted() {
     if (!currentUser) {
         console.log('You must be logged in to mark a task as completed.');
@@ -351,6 +420,10 @@ function markTaskAsCompleted() {
     });
 }
 
+/**
+ * Prompts the user to view tasks by priority.
+ * Requires the user to be logged in.
+ */
 function viewTasksByPriority() {
     if (!currentUser) {
         console.log('You must be logged in to view tasks.');
@@ -369,7 +442,9 @@ function viewTasksByPriority() {
     });
 }
 
-// Automation Engine
+/**
+ * Displays the automation menu to the user.
+ */
 function displayAutomationMenu() {
     console.log('\nAutomation Menu');
     console.log('1. Add Automation Rule');
@@ -379,6 +454,10 @@ function displayAutomationMenu() {
     rl.question('Enter your choice: ', handleAutomationMenuChoice);
 }
 
+/**
+ * Handles the user's choice in the automation menu.
+ * @param choice - The user's choice.
+ */
 function handleAutomationMenuChoice(choice: string) {
     switch (choice) {
         case '1':
@@ -397,8 +476,10 @@ function handleAutomationMenuChoice(choice: string) {
             console.log('Invalid choice. Please try again.');
             displayAutomationMenu();
     }
-}
-
+}/**
+ * Prompts the user to add a new automation rule by entering its details.
+ * Requires the user to be logged in.
+ */
 function addAutomationRule() {
     if (!currentUser) {
         console.log('You must be logged in to add an automation rule.');
@@ -434,6 +515,10 @@ function addAutomationRule() {
     });
 }
 
+/**
+ * Displays all automation rules for the current user.
+ * Requires the user to be logged in.
+ */
 function viewAutomationRules() {
     if (!currentUser) {
         console.log('You must be logged in to view automation rules.');
@@ -449,6 +534,10 @@ function viewAutomationRules() {
     displayAutomationMenu();
 }
 
+/**
+ * Prompts the user to remove an automation rule by entering its ID.
+ * Requires the user to be logged in.
+ */
 function removeAutomationRule() {
     if (!currentUser) {
         console.log('You must be logged in to remove an automation rule.');
@@ -466,6 +555,9 @@ function removeAutomationRule() {
     });
 }
 
+/**
+ * Displays the device management menu to the user.
+ */
 function displayDeviceMenu() {
     console.log('\nDevice Management');
     console.log('1. Add Device');
@@ -476,6 +568,10 @@ function displayDeviceMenu() {
     rl.question('Enter your choice: ', handleDeviceMenuChoice);
 }
 
+/**
+ * Handles the user's choice in the device management menu.
+ * @param choice - The user's choice.
+ */
 function handleDeviceMenuChoice(choice: string) {
     switch (choice) {
         case '1':
@@ -499,6 +595,10 @@ function handleDeviceMenuChoice(choice: string) {
     }
 }
 
+/**
+ * Prompts the user to add a new device by entering its details.
+ * Requires the user to be logged in.
+ */
 function addDevice() {
     if (!currentUser) {
         console.log('You must be logged in to add a device.');
@@ -520,6 +620,10 @@ function addDevice() {
     });
 }
 
+/**
+ * Prompts the user to remove a device by entering its ID.
+ * Requires the user to be logged in.
+ */
 function removeDevice() {
     if (!currentUser) {
         console.log('You must be logged in to remove a device.');
@@ -541,6 +645,10 @@ function removeDevice() {
     });
 }
 
+/**
+ * Displays all devices for the current user.
+ * Requires the user to be logged in.
+ */
 function viewAllDevices() {
     if (!currentUser) {
         console.log('You must be logged in to view devices.');
@@ -554,8 +662,10 @@ function viewAllDevices() {
         console.error('Error viewing devices:', (error as Error).message);
     }
     displayDeviceMenu();
-}
-
+}/**
+ * Prompts the user to control a device by entering its ID and a command.
+ * Requires the user to be logged in.
+ */
 function controlDevice() {
     if (!currentUser) {
         console.log('You must be logged in to control a device.');
@@ -616,6 +726,9 @@ function controlDevice() {
     });
 }
 
+/**
+ * Logs out the current user and displays the login menu.
+ */
 function logout() {
     currentUser = null;
     currentToken = null;
@@ -623,5 +736,6 @@ function logout() {
     displayLoginMenu();
 }
 
+// Initialize the Smart Home System and display the login menu
 console.log('Smart Home System initialized!');
 displayLoginMenu();
