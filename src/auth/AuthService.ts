@@ -47,7 +47,30 @@ export class AuthService {
         }
         return AuthService.instance;
     }
-
+    public async unregisterUser(username: string): Promise<void> {
+        const user = this.getUser(username);
+    
+        if (!user) {
+            throw new Error('User not found');
+        }
+    
+        // Perform any pre-removal cleanup or actions (e.g., log the action)
+        console.log(`Unregistering user: ${username}`);
+    
+        // Remove user roles (if necessary)
+        user.roles.forEach(roleId => {
+            this.removeRoleFromUser(username, this.getRole(roleId)?.name!);
+        });
+    
+        // Remove user from the in-memory map
+        this.users.delete(username);
+    
+        // Notify observers about user removal
+        this.notifyObservers('userUnregistered', { username });
+    
+        console.log(`User ${username} has been unregistered successfully.`);
+    }
+    
     // Observer Pattern methods
     public addObserver(observer: AuthObserver): void {
         this.observers.push(observer);
@@ -66,17 +89,77 @@ export class AuthService {
         }
     }
 
+    // In AuthService class
+public removeUser(username: string): void {
+    if (!this.users.has(username)) {
+        throw new Error('User not found');
+    }
+    this.users.delete(username);
+}
     // Role management methods
     private initializeDefaultRoles(): void {
-        this.addRole('user', ['read:own_profile',]);
-        this.addRole('admin', ['read:any_profile', 'write:any_profile', 'delete:any_profile','create:task', 'read:task', 'update:task', 'delete:task', 'create:automation', 'read:automation', 'update:automation', 'delete:automation', 'execute:automation', 'create:schedule', 'read:schedule', 'update:schedule', 'delete:schedule', 'execute:schedule','send:notification', 'create:role', 'read:role', 'update:role', 'delete:role', 'assign:role', 'remove:role', 'create:user', 'read:user', 'update:user', 'delete:user', 'assign:user_role', 'remove:user_role', 'create:device', 'read:device', 'update:device', 'delete:device', 'execute:command', 'create:task', 'read:task', 'update:task', 'delete:task', 'execute:task', 'create:automation', 'read:automation', 'update:automation', 'delete:automation', 'execute:automation', 'create:schedule', 'read:schedule', 'update:schedule', 'delete:schedule', 'execute:schedule','create:notification',
-            'read:task',
+        this.addRole('user', ['read:own_profile']);
+    
+        this.addRole('admin', [
+            // Profile permissions
+            'read:any_profile',
+            'write:any_profile',
+            'delete:any_profile',
+    
+            // Task permissions
             'create:task',
-            'delete:task',
+            'read:task',
             'update:task',
+            'delete:task',
+            'execute:task',
+    
+            // Automation permissions
+            'create:automation',
+            'read:automation',
+            'update:automation',
+            'delete:automation',
+            'execute:automation',
+    
+            // Schedule permissions
             'create:schedule',
-            'create:automation']);
+            'read:schedule',
+            'update:schedule',
+            'delete:schedule',
+            'execute:schedule',
+    
+            // Notification permissions
+            'send:notification',
+            
+            // Role permissions
+            'create:role',
+            'read:role',
+            'update:role',
+            'delete:role',
+            'assign:role',
+            'remove:role',
+    
+            // User permissions
+            'create:user',
+            'read:user',
+            'update:user',
+            'delete:user',
+            'assign:user_role',
+            'remove:user_role',
+    
+            // Device permissions
+            'create:device',
+            'read:device',
+            'update:device',
+            'delete:device',
+    
+            // Command permissions
+            'execute:command',
+    
+            // Additional permissions
+            'create:notification'
+        ]);
     }
+    
     private async createDefaultAdmin() {
         try {
             const hashedPassword = await bcrypt.hash('adminpassword', 12);  // CHANGE THIS PASSWORD!
